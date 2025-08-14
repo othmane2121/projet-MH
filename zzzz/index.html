@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dar Marbouh - Restaurant Marocain Authentique</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f5f0;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #d4a574 0%, #8b4513 100%);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #f4d03f;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-content p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #d4a574;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background: #8b4513;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Section commune */
+        .section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section h2 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            color: #8b4513;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* À propos */
+        .about {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .about-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .about-image {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .about-image img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        /* Menu */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .menu-item {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .menu-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .menu-item-content {
+            padding: 1.5rem;
+        }
+
+        .menu-item h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #8b4513;
+        }
+
+        .menu-item p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #d4a574;
+            margin-bottom: 1rem;
+        }
+
+        .add-to-cart {
+            background: #d4a574;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        .add-to-cart:hover {
+            background: #8b4513;
+        }
+
+        /* Panier */
+        .cart {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            min-width: 300px;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-total {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            text-align: center;
+            color: #8b4513;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            background: #d4a574;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        .checkout-btn:hover {
+            background: #8b4513;
+        }
+
+        /* Footer */
+        footer {
+            background: #8b4513;
+            color: white;
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 0 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: #f4d03f;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .cart {
+                position: static;
+                margin: 2rem 0;
+            }
+        }
+
+        .cart-hidden {
+            display: none;
+        }
+
+        .cart-toggle {
+            background: #d4a574;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .remove-item {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">🏛️ Dar Marbouh</div>
+            <ul class="nav-links">
+                <li><a href="#accueil">Accueil</a></li>
+                <li><a href="#about">À Propos</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><button class="cart-toggle" onclick="toggleCart()">Panier (<span id="cart-count">0</span>)</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero" id="accueil">
+        <div class="hero-content">
+            <h1>Dar Marbouh</h1>
+            <p>Savourez l'authenticité de la cuisine marocaine traditionnelle</p>
+            <a href="#menu" class="btn">Découvrir notre menu</a>
+        </div>
+    </section>
+
+    <div class="cart cart-hidden" id="cart">
+        <div class="cart-header">
+            <h3>Votre Commande</h3>
+            <button onclick="toggleCart()" style="background:none;border:none;font-size:1.5rem;cursor:pointer;">×</button>
+        </div>
+        <div id="cart-items"></div>
+        <div class="cart-total" id="cart-total">Total: 0 DH</div>
+        <button class="checkout-btn" onclick="checkout()">Commander</button>
+    </div>
+
+    <section class="section" id="about">
+        <div class="about">
+            <h2>Notre Histoire</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Bienvenue chez <strong>Dar Marbouh</strong>, où les traditions culinaires marocaines prennent vie dans chaque plat. Depuis des générations, notre famille perpétue l'art de la cuisine marocaine authentique, en utilisant des recettes transmises de mère en fille.</p>
+                    
+                    <p>Nos chefs expérimentés préparent chaque plat avec amour et passion, en utilisant uniquement les épices les plus fines et les ingrédients les plus frais. De nos tajines mijotés à la perfection à nos pâtisseries orientales délicates, chaque bouchée vous transportera au cœur du Maroc.</p>
+                    
+                    <p>Dar Marbouh, c'est plus qu'un restaurant, c'est une expérience culturelle où l'hospitalité marocaine légendaire rencontre la gastronomie d'exception.</p>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1544025162-d76694265947?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Intérieur du restaurant">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="menu">
+        <h2>Notre Menu</h2>
+        <div class="menu-grid">
+            <!-- Tajines -->
+            <div class="menu-item">
+                <img src="https://images.unsplash.com/photo-1539136788836-5699e78bfc75?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Tajine aux légumes">
+                <div class="menu-item-content">
+                    <h3>Tajine aux Légumes</h3>
+                    <p>Mélange harmonieux de légumes de saison, mijotés avec nos épices secrètes</p>
+                    <div class="price">85 DH</div>
+                    <button class="add-to-cart" onclick="addToCart('Tajine aux Légumes', 85)">Ajouter au panier</button>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <img src="https://images.unsplash.com/photo-1512058564366-18510be2db19?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Tajine au poulet">
+                <div class="menu-item-content">
+                    <h3>Tajine au Poulet et Olives</h3>
+                    <p>Poulet fermier aux olives vertes, citron confit et épices marocaines</p>
+                    <div class="price">95 DH</div>
+                    <button class="add-to-cart" onclick="addToCart('Tajine au Poulet et Olives', 95)">Ajouter au panier</button>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <img src="https://images.unsplash.com/photo-1596797038530-2c107229654b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Tajine agneau">
+                <div class="menu-item-content">
+                    <h3>Tajine d'Agneau aux Pruneaux</h3>
+                    <p>Agneau tendre mijoté avec des pruneaux et amandes, un délice sucré-salé</p>
+                    <div class="price">120 DH</div>
+                    <button class="add-to-cart" onclick="addToCart('Tajine d\'Agneau aux Pruneaux', 120)">Ajouter au panier</button>
+                </div>
+            </div>
+
+            <!-- Couscous -->
+            <div class="menu-item">
+                <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Couscous royal">
+                <div class="menu-item-content">
+                    <h3>Couscous Royal</h3>
+                    <p>Couscous traditionnel avec agneau, poulet, merguez et légumes variés</p>
+                    <div class="price">130 DH</div>
+                    <button class="add-to-cart" onclick="addToCart('Couscous Royal', 130)">Ajouter au panier</button>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <img src="https://tse2.mm.bing.net/th/id/OIP.heZjShnSv8mDw1SHiP49zQHaEK?w=960&h=540&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Couscous aux légumes">
+                <div class="menu-item-content">
+                    <h3>Couscous aux Sept Légumes</h3>
+                    <p>Version végétarienne de notre couscous, riche en saveurs et couleurs</p>
+                    <div class="price">75 DH</div>
+                    <button class="add-to-cart" onclick="addToCart('Couscous aux Sept Légumes', 75)">Ajouter au panier</button>
+                </div>
+            </div>
+
+            <!-- Grillades -->
+            <div class="menu-item">
+                <img src="https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Brochettes">
+                <div class="menu-item-content">
+                    <h3>Brochettes Mixtes</h3>
+                    <p>Mélange de bœuf, agneau et poulet marinés, grillés à la perfection</p>
+                    <div class="price">110 DH</div>
+                    <button class="add-to-cart" onclick="addToCart('Brochettes Mixtes', 110)">Ajouter au panier</button>
+                </div>
+            </div>
+
+            <!-- Pâtisseries -->
+            <div class="menu-item">
+                <img src="https://www.cfa-espace-concours.fr/wp-content/uploads/2023/01/patisseries-francaises-scaled.jpg" alt="Baklava">
+                <div class="menu-item-content">
+                    <h3>Assortiment de Pâtisseries</h3>
+                    <p>Sélection de cornes de gazelle, chebakia, et makroud traditionnels</p>
+                    <div class="price">45 DH</div>
+                    <button class="add-to-cart" onclick="addToCart('Assortiment de Pâtisseries', 45)">Ajouter au panier</button>
+                </div>
+            </div>
+
+            <!-- Boissons -->
+            <div class="menu-item">
+                <img src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Thé à la menthe">
+                <div class="menu-item-content">
+                    <h3>Thé à la Menthe</h3>
+                    <p>Le célèbre thé marocain, préparé selon la tradition avec menthe fraîche</p>
+                    <div class="price">15 DH</div>
+                    <button class="add-to-cart" onclick="addToCart('Thé à la Menthe', 15)">Ajouter au panier</button>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <img src="https://images.unsplash.com/photo-1570197788417-0e82375c9371?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Jus d'orange">
+                <div class="menu-item-content">
+                    <h3>Jus d'Orange Fraîche</h3>
+                    <p>Oranges fraîchement pressées, source de vitamines et de fraîcheur</p>
+                    <div class="price">20 DH</div>
+                    <button class="add-to-cart" onclick="addToCart('Jus d\'Orange Fraîche', 20)">Ajouter au panier</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>📞 Téléphone: +212 5XX-XXXXXX</p>
+                <p>📧 Email: contact@darmarbouh.ma</p>
+                <p>📍 Adresse: Quartier Gueliz, Marrakech</p>
+            </div>
+            <div class="footer-section">
+                <h3>Horaires</h3>
+                <p>Lundi - Dimanche</p>
+                <p>12h00 - 15h00</p>
+                <p>19h00 - 23h00</p>
+            </div>
+            <div class="footer-section">
+                <h3>Suivez-nous</h3>
+                <p>🌟 Instagram: @darmarbouh</p>
+                <p>👥 Facebook: Dar Marbouh Restaurant</p>
+                <p>📱 TikTok: @darmarbouh_officiel</p>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.2);">
+            <p>&copy; 2024 Dar Marbouh. Tous droits réservés. 🇲🇦</p>
+        </div>
+    </footer>
+
+    <script>
+        let cart = [];
+        let cartTotal = 0;
+
+        function addToCart(itemName, price) {
+            const existingItem = cart.find(item => item.name === itemName);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+                existingItem.total = existingItem.price * existingItem.quantity;
+            } else {
+                cart.push({
+                    name: itemName,
+                    price: price,
+                    quantity: 1,
+                    total: price
+                });
+            }
+            
+            updateCartDisplay();
+            showAddedToCartMessage(itemName);
+        }
+
+        function removeFromCart(itemName) {
+            cart = cart.filter(item => item.name !== itemName);
+            updateCartDisplay();
+        }
+
+        function updateCartDisplay() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartCount = document.getElementById('cart-count');
+            const cartTotalElement = document.getElementById('cart-total');
+            
+            cartItemsContainer.innerHTML = '';
+            cartTotal = 0;
+            
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p style="text-align:center;color:#999;">Votre panier est vide</p>';
+            } else {
+                cart.forEach(item => {
+                    cartTotal += item.total;
+                    cartItemsContainer.innerHTML += `
+                        <div class="cart-item">
+                            <div>
+                                <strong>${item.name}</strong><br>
+                                <small>${item.quantity} × ${item.price} DH</small>
+                            </div>
+                            <div>
+                                <span style="margin-right: 10px;">${item.total} DH</span>
+                                <button class="remove-item" onclick="removeFromCart('${item.name}')">×</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartTotalElement.textContent = `Total: ${cartTotal} DH`;
+        }
+
+        function toggleCart() {
+            const cart = document.getElementById('cart');
+            cart.classList.toggle('cart-hidden');
+        }
+
+        function showAddedToCartMessage(itemName) {
+            // Créer un message de confirmation
+            const message = document.createElement('div');
+            message.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: #27ae60;
+                color: white;
+                padding: 1rem;
+                border-radius: 5px;
+                z-index: 2000;
+                animation: slideInRight 0.3s ease-out;
+            `;
+            message.textContent = `${itemName} ajouté au panier!`;
+            document.body.appendChild(message);
+            
+            setTimeout(() => {
+                message.remove();
+            }, 3000);
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Votre panier est vide!');
+                return;
+            }
+            
+            let orderSummary = 'Résumé de votre commande:\n\n';
+            cart.forEach(item => {
+                orderSummary += `${item.name} × ${item.quantity} = ${item.total} DH\n`;
+            });
+            orderSummary += `\nTotal: ${cartTotal} DH\n\n`;
+            orderSummary += 'Veuillez fournir vos informations de livraison:';
+            
+            const customerInfo = prompt(orderSummary + '\n\nNom et téléphone:');
+            
+            if (customerInfo) {
+                alert(`Merci pour votre commande! 🎉\n\nNous vous contacterons bientôt pour confirmer la livraison.\n\nTotal: ${cartTotal} DH`);
+                cart = [];
+                updateCartDisplay();
+                toggleCart();
+            }
+        }
+
+        // Smooth scrolling pour les liens de navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Animation d'entrée pour les éléments du menu
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observer les éléments du menu
+        document.querySelectorAll('.menu-item').forEach((item, index) => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(30px)';
+            item.style.transition = `opacity 0.6s ease-out ${index * 0.1}s, transform 0.6s ease-out ${index * 0.1}s`;
+            observer.observe(item);
+        });
+    </script>
+</body>
+</html>
