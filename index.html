@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hamza - Location de Voitures</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0f0000 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Car Grid */
+        .cars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .car-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .car-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .car-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .car-info {
+            padding: 1.5rem;
+        }
+
+        .car-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .car-details {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .car-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ee5a24;
+            margin-bottom: 1rem;
+        }
+
+        /* Forms */
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .admin-sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 1.5rem;
+            height: fit-content;
+        }
+
+        .admin-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .admin-nav {
+            list-style: none;
+        }
+
+        .admin-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-nav a {
+            display: block;
+            padding: 1rem;
+            color: #333;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .admin-nav a:hover,
+        .admin-nav a.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        /* Tables */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .table th,
+        .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        /* Login Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 400px;
+            max-width: 90%;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            color: #aaa;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-buttons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .admin-panel {
+                grid-template-columns: 1fr;
+            }
+
+            .cars-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">🚗 HAMZA JIRIMI</div>
+        <div class="nav-buttons">
+            <button class="btn btn-secondary" onclick="showPage('home')">Accueil</button>
+            <button class="btn btn-secondary" onclick="showPage('booking')">Réserver</button>
+            <button class="btn btn-primary" onclick="showLoginModal()">Admin</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Home Page -->
+        <div id="home" class="page active">
+            <h1 style="color: white; text-align: center; margin-bottom: 2rem; font-size: 3rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
+                Nos Véhicules Disponibles
+            </h1>
+            
+            <div class="cars-grid" id="carsGrid">
+                <!-- Les voitures seront chargées ici -->
+            </div>
+        </div>
+
+        <!-- Booking Page -->
+        <div id="booking" class="page">
+            <div class="form-container">
+                <h2 style="color: #333; margin-bottom: 2rem; text-align: center;">Réserver une Voiture</h2>
+                <form id="bookingForm">
+                    <div class="form-group">
+                        <label>Voiture:</label>
+                        <select id="carSelect" required>
+                            <option value="">Sélectionnez une voiture</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Nom Complet:</label>
+                        <input type="text" id="customerName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="customerEmail" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Téléphone:</label>
+                        <input type="tel" id="customerPhone" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Date de début:</label>
+                        <input type="date" id="startDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Date de fin:</label>
+                        <input type="date" id="endDate" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Envoyer la Demande</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="admin" class="page">
+            <div class="admin-panel">
+                <aside class="admin-sidebar">
+                    <h3 style="margin-bottom: 1rem; color: #333;">Administration</h3>
+                    <ul class="admin-nav">
+                        <li><a href="#" onclick="showAdminSection('bookings')" class="active">Réservations</a></li>
+                        <li><a href="#" onclick="showAdminSection('cars')">Gérer Voitures</a></li>
+                        <li><a href="#" onclick="showAdminSection('employees')">Employés</a></li>
+                        <li><a href="#" onclick="showAdminSection('settings')">Paramètres</a></li>
+                        <li><a href="#" onclick="logout()">Déconnexion</a></li>
+                    </ul>
+                </aside>
+                
+                <main class="admin-content">
+                    <!-- Bookings Section -->
+                    <div id="admin-bookings" class="admin-section">
+                        <h2>Demandes de Réservation</h2>
+                        <div id="bookingsTable"></div>
+                    </div>
+                    
+                    <!-- Cars Section -->
+                    <div id="admin-cars" class="admin-section" style="display: none;">
+                        <h2>Gestion des Voitures</h2>
+                        <button class="btn btn-primary" onclick="showAddCarForm()" style="margin-bottom: 1rem;">Ajouter une Voiture</button>
+                        <div id="addCarForm" style="display: none;">
+                            <form id="carForm">
+                                <div class="form-group">
+                                    <label>Nom:</label>
+                                    <input type="text" id="carName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>URL de l'image:</label>
+                                    <input type="url" id="carImage" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Description:</label>
+                                    <textarea id="carDescription" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Prix par jour (€):</label>
+                                    <input type="number" id="carPrice" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Ajouter</button>
+                                <button type="button" class="btn btn-secondary" onclick="hideAddCarForm()">Annuler</button>
+                            </form>
+                        </div>
+                        <div id="carsTable"></div>
+                    </div>
+                    
+                    <!-- Employees Section -->
+                    <div id="admin-employees" class="admin-section" style="display: none;">
+                        <h2>Gestion des Employés</h2>
+                        <button class="btn btn-primary" onclick="showAddEmployeeForm()" style="margin-bottom: 1rem;">Ajouter un Employé</button>
+                        <div id="addEmployeeForm" style="display: none;">
+                            <form id="employeeForm">
+                                <div class="form-group">
+                                    <label>Nom:</label>
+                                    <input type="text" id="employeeName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email:</label>
+                                    <input type="email" id="employeeEmail" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Poste:</label>
+                                    <input type="text" id="employeePosition" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Téléphone:</label>
+                                    <input type="tel" id="employeePhone" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Ajouter</button>
+                                <button type="button" class="btn btn-secondary" onclick="hideAddEmployeeForm()">Annuler</button>
+                            </form>
+                        </div>
+                        <div id="employeesTable"></div>
+                    </div>
+
+                    <!-- Settings Section -->
+                    <div id="admin-settings" class="admin-section" style="display: none;">
+                        <h2>Paramètres du Système</h2>
+                        
+                        <!-- Change Password Section -->
+                        <div class="form-container" style="margin-top: 0;">
+                            <h3 style="color: #333; margin-bottom: 1.5rem;">Changer le Mot de Passe Admin</h3>
+                            <form id="changePasswordForm">
+                                <div class="form-group">
+                                    <label>Mot de passe actuel:</label>
+                                    <input type="password" id="currentPassword" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nouveau mot de passe:</label>
+                                    <input type="password" id="newPassword" required minlength="6">
+                                </div>
+                                <div class="form-group">
+                                    <label>Confirmer le nouveau mot de passe:</label>
+                                    <input type="password" id="confirmPassword" required minlength="6">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Changer le Mot de Passe</button>
+                            </form>
+                        </div>
+
+                        <!-- System Info Section -->
+                        <div class="form-container">
+                            <h3 style="color: #333; margin-bottom: 1.5rem;">Informations Système</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                                <div style="background: #f8f9fa; padding: 1rem; border-radius: 10px;">
+                                    <h4 style="color: #667eea; margin-bottom: 0.5rem;">Statistiques</h4>
+                                    <p><strong>Voitures:</strong> <span id="statsCarCount">0</span></p>
+                                    <p><strong>Réservations:</strong> <span id="statsBookingCount">0</span></p>
+                                    <p><strong>Employés:</strong> <span id="statsEmployeeCount">0</span></p>
+                                </div>
+                                <div style="background: #f8f9fa; padding: 1rem; border-radius: 10px;">
+                                    <h4 style="color: #667eea; margin-bottom: 0.5rem;">Sécurité</h4>
+                                    <p><strong>Dernière connexion:</strong> <span id="lastLogin">Aujourd'hui</span></p>
+                                    <p><strong>Session active:</strong> <span style="color: #28a745;">Oui</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideLoginModal()">&times;</span>
+            <h2 style="margin-bottom: 1.5rem; color: #333;">Connexion Admin</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Mot de passe:</label>
+                    <input type="password" id="adminPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Se connecter</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Base de données simulée
+        let database = {
+            cars: [
+                {
+                    id: 1,
+                    name: "BMW Série 3",
+                    image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                    description: "Berline de luxe, automatique, GPS intégré, climatisation",
+                    price: 89
+                },
+                {
+                    id: 2,
+                    name: "Mercedes Classe C",
+                    image: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                    description: "Élégante et confortable, boîte automatique, cuir",
+                    price: 95
+                },
+                {
+                    id: 3,
+                    name: "Audi A4",
+                    image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                    description: "Sportive et technologique, système multimédia avancé",
+                    price: 92
+                },
+                {
+                    id: 4,
+                    name: "Volkswagen Passat",
+                    image: "https://images.unsplash.com/photo-1494905998402-395d579af36f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                    description: "Familiale spacieuse, economique, très fiable",
+                    price: 65
+                },
+                {
+                    id: 5,
+                    name: "Peugeot 3008",
+                    image: "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                    description: "SUV moderne, position de conduite surélevée",
+                    price: 75
+                },
+                {
+                    id: 6,
+                    name: "Renault Clio",
+                    image: "https://images.unsplash.com/photo-1520031441872-265e4ff70366?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+                    description: "Citadine pratique, idéale pour la ville",
+                    price: 45
+                }
+            ],
+            bookings: [],
+            employees: [
+                {
+                    id: 1,
+                    name: "Marie Dubois",
+                    email: "marie.dubois@autoloc.com",
+                    position: "Responsable Location",
+                    phone: "01 23 45 67 89"
+                }
+            ],
+            settings: {
+                adminPassword: "admin123",
+                lastLogin: null
+            }
+        };
+
+        let isLoggedIn = false;
+        let currentPage = 'home';
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCars();
+            loadCarSelect();
+            setMinDate();
+        });
+
+        // Navigation
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(page).classList.add('active');
+            currentPage = page;
+        }
+
+        // Chargement des voitures
+        function loadCars() {
+            const grid = document.getElementById('carsGrid');
+            grid.innerHTML = '';
+            
+            database.cars.forEach(car => {
+                const carCard = `
+                    <div class="car-card">
+                        <img src="${car.image}" alt="${car.name}" class="car-image">
+                        <div class="car-info">
+                            <h3 class="car-title">${car.name}</h3>
+                            <p class="car-details">${car.description}</p>
+                            <div class="car-price">${car.price}€/jour</div>
+                            <button class="btn btn-primary" onclick="selectCarForBooking(${car.id})">Réserver</button>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += carCard;
+            });
+        }
+
+        function loadCarSelect() {
+            const select = document.getElementById('carSelect');
+            select.innerHTML = '<option value="">Sélectionnez une voiture</option>';
+            
+            database.cars.forEach(car => {
+                select.innerHTML += `<option value="${car.id}">${car.name} - ${car.price}€/jour</option>`;
+            });
+        }
+
+        function selectCarForBooking(carId) {
+            showPage('booking');
+            document.getElementById('carSelect').value = carId;
+        }
+
+        function setMinDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('startDate').min = today;
+            document.getElementById('endDate').min = today;
+        }
+
+        // Gestion du formulaire de réservation
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const booking = {
+                id: Date.now(),
+                carId: parseInt(document.getElementById('carSelect').value),
+                customerName: document.getElementById('customerName').value,
+                customerEmail: document.getElementById('customerEmail').value,
+                customerPhone: document.getElementById('customerPhone').value,
+                startDate: document.getElementById('startDate').value,
+                endDate: document.getElementById('endDate').value,
+                status: 'pending',
+                date: new Date().toLocaleDateString('fr-FR')
+            };
+            
+            database.bookings.push(booking);
+            
+            alert('Votre demande de réservation a été envoyée avec succès! Nous vous répondrons sous 24h.');
+            this.reset();
+            showPage('home');
+        });
+
+        // Système de connexion admin
+        function showLoginModal() {
+            document.getElementById('loginModal').style.display = 'block';
+        }
+
+        function hideLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const password = document.getElementById('adminPassword').value;
+            
+            if (password === database.settings.adminPassword) {
+                isLoggedIn = true;
+                database.settings.lastLogin = new Date().toLocaleString('fr-FR');
+                hideLoginModal();
+                showPage('admin');
+                loadAdminData();
+                document.getElementById('adminPassword').value = '';
+            } else {
+                alert('Mot de passe incorrect!');
+            }
+        });
+
+        function logout() {
+            isLoggedIn = false;
+            showPage('home');
+        }
+
+        // Administration
+        function showAdminSection(section) {
+            document.querySelectorAll('.admin-section').forEach(s => s.style.display = 'none');
+            document.getElementById('admin-' + section).style.display = 'block';
+            
+            document.querySelectorAll('.admin-nav a').forEach(a => a.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (section === 'bookings') loadBookings();
+            if (section === 'cars') loadCarsAdmin();
+            if (section === 'employees') loadEmployees();
+            if (section === 'settings') loadSettings();
+        }
+
+        function loadAdminData() {
+            loadBookings();
+        }
+
+        function loadBookings() {
+            const container = document.getElementById('bookingsTable');
+            
+            if (database.bookings.length === 0) {
+                container.innerHTML = '<p>Aucune réservation pour le moment.</p>';
+                return;
+            }
+            
+            let table = `
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Voiture</th>
+                            <th>Dates</th>
+                            <th>Contact</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            database.bookings.forEach(booking => {
+                const car = database.cars.find(c => c.id === booking.carId);
+                const statusClass = 'status-' + booking.status;
+                const statusText = booking.status === 'pending' ? 'En attente' : 
+                                 booking.status === 'approved' ? 'Approuvée' : 'Refusée';
+                
+                table += `
+                    <tr>
+                        <td>${booking.customerName}</td>
+                        <td>${car ? car.name : 'N/A'}</td>
+                        <td>${booking.startDate} au ${booking.endDate}</td>
+                        <td>${booking.customerEmail}<br>${booking.customerPhone}</td>
+                        <td><span class="${statusClass}">${statusText}</span></td>
+                        <td>
+                            ${booking.status === 'pending' ? `
+                                <button class="btn btn-primary" onclick="updateBookingStatus(${booking.id}, 'approved')" style="margin-right: 0.5rem;">Approuver</button>
+                                <button class="btn btn-secondary" onclick="updateBookingStatus(${booking.id}, 'rejected')">Refuser</button>
+                            ` : ''}
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            table += '</tbody></table>';
+            container.innerHTML = table;
+        }
+
+        function updateBookingStatus(bookingId, status) {
+            const booking = database.bookings.find(b => b.id === bookingId);
+            if (booking) {
+                booking.status = status;
+                loadBookings();
+                alert(`Réservation ${status === 'approved' ? 'approuvée' : 'refusée'} avec succès!`);
+            }
+        }
+
+        // Gestion des voitures
+        function loadCarsAdmin() {
+            const container = document.getElementById('carsTable');
+            
+            let table = `
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Nom</th>
+                            <th>Prix</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            database.cars.forEach(car => {
+                table += `
+                    <tr>
+                        <td><img src="${car.image}" style="width: 80px; height: 50px; object-fit: cover; border-radius: 5px;"></td>
+                        <td>${car.name}</td>
+                        <td>${car.price}€/jour</td>
+                        <td>${car.description}</td>
+                        <td>
+                            <button class="btn btn-secondary" onclick="deleteCar(${car.id})">Supprimer</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            table += '</tbody></table>';
+            container.innerHTML = table;
+        }
+
+        function showAddCarForm() {
+            document.getElementById('addCarForm').style.display = 'block';
+        }
+
+        function hideAddCarForm() {
+            document.getElementById('addCarForm').style.display = 'none';
+            document.getElementById('carForm').reset();
+        }
+
+        document.getElementById('carForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const car = {
+                id: Date.now(),
+                name: document.getElementById('carName').value,
+                image: document.getElementById('carImage').value,
+                description: document.getElementById('carDescription').value,
+                price: parseInt(document.getElementById('carPrice').value)
+            };
+            
+            database.cars.push(car);
+            loadCars();
+            loadCarSelect();
+            loadCarsAdmin();
+            hideAddCarForm();
+            alert('Voiture ajoutée avec succès!');
+        });
+
+        function deleteCar(carId) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette voiture?')) {
+                database.cars = database.cars.filter(c => c.id !== carId);
+                loadCars();
+                loadCarSelect();
+                loadCarsAdmin();
+                alert('Voiture supprimée avec succès!');
+            }
+        }
+
+        // Gestion des employés
+        function loadEmployees() {
+            const container = document.getElementById('employeesTable');
+            
+            let table = `
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Email</th>
+                            <th>Poste</th>
+                            <th>Téléphone</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            database.employees.forEach(employee => {
+                table += `
+                    <tr>
+                        <td>${employee.name}</td>
+                        <td>${employee.email}</td>
+                        <td>${employee.position}</td>
+                        <td>${employee.phone}</td>
+                        <td>
+                            <button class="btn btn-secondary" onclick="deleteEmployee(${employee.id})">Supprimer</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            table += '</tbody></table>';
+            container.innerHTML = table;
+        }
+
+        function showAddEmployeeForm() {
+            document.getElementById('addEmployeeForm').style.display = 'block';
+        }
+
+        function hideAddEmployeeForm() {
+            document.getElementById('addEmployeeForm').style.display = 'none';
+            document.getElementById('employeeForm').reset();
+        }
+
+        document.getElementById('employeeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const employee = {
+                id: Date.now(),
+                name: document.getElementById('employeeName').value,
+                email: document.getElementById('employeeEmail').value,
+                position: document.getElementById('employeePosition').value,
+                phone: document.getElementById('employeePhone').value
+            };
+            
+            database.employees.push(employee);
+            loadEmployees();
+            hideAddEmployeeForm();
+            alert('Employé ajouté avec succès!');
+        });
+
+        function deleteEmployee(employeeId) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cet employé?')) {
+                database.employees = database.employees.filter(e => e.id !== employeeId);
+                loadEmployees();
+                alert('Employé supprimé avec succès!');
+            }
+        }
+
+        // Gestion des événements du clavier
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hideLoginModal();
+            }
+        });
+
+        // Fermer la modal en cliquant à l'extérieur
+        window.onclick = function(event) {
+            const modal = document.getElementById('loginModal');
+            if (event.target === modal) {
+                hideLoginModal();
+            }
+        }
+
+        // Validation des dates
+        document.getElementById('startDate').addEventListener('change', function() {
+            const startDate = this.value;
+            const endDateInput = document.getElementById('endDate');
+            endDateInput.min = startDate;
+            
+            if (endDateInput.value && endDateInput.value < startDate) {
+                endDateInput.value = '';
+            }
+        });
+
+        // Animation d'entrée
+        setTimeout(() => {
+            document.body.style.opacity = '1';
+        }, 100);
+
+        // Persistance des données (simulation)
+        function saveData() {
+            localStorage.setItem('autolocData', JSON.stringify(database));
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('autolocData');
+            if (saved) {
+                database = JSON.parse(saved);
+            }
+        }
+
+        // Auto-save
+        setInterval(saveData, 10000); // Sauvegarde toutes les 10 secondes
+
+        // Chargement initial des données sauvegardées
+        // loadData(); // Commenté car localStorage n'est pas supporté dans les artifacts
+    </script>
+
+      <!-- Footer -->
+    <footer style="background: rgba(0, 0, 0, 0.8); color: white; text-align: center; padding: 3rem 2rem; margin-top: 4rem;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+                
+                <!-- Contact Info -->
+                <div>
+                    <h3 style="color: #667eea; margin-bottom: 1rem; font-size: 1.3rem;">📞 Contact</h3>
+                    <p style="margin-bottom: 0.5rem; line-height: 1.6;">
+                        <strong>Téléphone:</strong> +212 524 123 456
+                    </p>
+                    <p style="margin-bottom: 0.5rem; line-height: 1.6;">
+                        <strong>Email:</strong> contact@autolocpro.ma
+                    </p>
+                    <p style="margin-bottom: 0.5rem; line-height: 1.6;">
+                        <strong>Adresse:</strong> 123 Avenue Mohammed V<br>
+                        Marrakech, Maroc
+                    </p>
+                </div>
+
+                <!-- Services -->
+                <div>
+                    <h3 style="color: #667eea; margin-bottom: 1rem; font-size: 1.3rem;">🚗 Nos Services</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 0.5rem;">✓ Location courte durée</li>
+                        <li style="margin-bottom: 0.5rem;">✓ Location longue durée</li>
+                        <li style="margin-bottom: 0.5rem;">✓ Véhicules de luxe</li>
+                        <li style="margin-bottom: 0.5rem;">✓ Assurance incluse</li>
+                        <li style="margin-bottom: 0.5rem;">✓ Assistance 24h/24</li>
+                    </ul>
+                </div>
+
+                <!-- Hours -->
+                <div>
+                    <h3 style="color: #667eea; margin-bottom: 1rem; font-size: 1.3rem;">🕒 Horaires</h3>
+                    <p style="margin-bottom: 0.5rem; line-height: 1.6;">
+                        <strong>Lundi - Vendredi:</strong><br>8h00 - 19h00
+                    </p>
+                    <p style="margin-bottom: 0.5rem; line-height: 1.6;">
+                        <strong>Samedi:</strong><br>9h00 - 18h00
+                    </p>
+                    <p style="margin-bottom: 0.5rem; line-height: 1.6;">
+                        <strong>Dimanche:</strong><br>10h00 - 16h00
+                    </p>
+                </div>
+
+                 
+            </div>
+
+            <!-- Divider -->
+            <div style="height: 1px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent); margin: 2rem 0;"></div>
+
+            <!-- Bottom Info -->
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <p style="margin: 0; opacity: 0.8;">
+                        © 2025 AutoLoc Pro. Tous droits réservés.
+                    </p>
+                </div>
+                <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+                    <a href="#" style="color: rgba(255, 255, 255, 0.7); text-decoration: none; transition: color 0.3s ease;"
+                       onmouseover="this.style.color='white'"
+                       onmouseout="this.style.color='rgba(255, 255, 255, 0.7)'">
+                        Conditions générales
+                    </a>
+                    <a href="#" style="color: rgba(255, 255, 255, 0.7); text-decoration: none; transition: color 0.3s ease;"
+                       onmouseover="this.style.color='white'"
+                       onmouseout="this.style.color='rgba(255, 255, 255, 0.7)'">
+                        Politique de confidentialité
+                    </a>
+                    <a href="#" style="color: rgba(255, 255, 255, 0.7); text-decoration: none; transition: color 0.3s ease;"
+                       onmouseover="this.style.color='white'"
+                       onmouseout="this.style.color='rgba(255, 255, 255, 0.7)'">
+                        Mentions légales
+                    </a>
+                </div>
+            </div>
+
+            <!-- Trust Indicators -->
+            <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; opacity: 0.8;">
+                        <span style="font-size: 1.5rem;">🛡️</span>
+                        <span>Paiement Sécurisé</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; opacity: 0.8;">
+                        <span style="font-size: 1.5rem;">🏆</span>
+                        <span>Service Premium</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; opacity: 0.8;">
+                        <span style="font-size: 1.5rem;">⭐</span>
+                        <span>10 ans d'expérience</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; opacity: 0.8;">
+                        <span style="font-size: 1.5rem;">📞</span>
+                        <span>Support 24/7</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Floating Back to Top Button -->
+            <button id="backToTopBtn" onclick="scrollToTop()" 
+                    style="position: fixed; bottom: 30px; right: 30px; background: linear-gradient(45deg, #667eea, #764ba2); 
+                           color: white; border: none; width: 50px; height: 50px; border-radius: 50%; 
+                           cursor: pointer; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); 
+                           font-size: 1.2rem; z-index: 1000; transition: all 0.3s ease; display: none;"
+                    onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(102, 126, 234, 0.6)'"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.4)'">
+                ↑
+            </button>
+        </div>
+    </footer>
+
+    <script>
+        // Show/Hide Back to Top Button
+        window.addEventListener('scroll', function() {
+            const backToTopBtn = document.getElementById('backToTopBtn');
+            if (window.pageYOffset > 300) {
+                backToTopBtn.style.display = 'block';
+            } else {
+                backToTopBtn.style.display = 'none';
+            }
+        });
+
+        // Smooth scroll to top
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>
